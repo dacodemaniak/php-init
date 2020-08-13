@@ -1,0 +1,8 @@
+# Ignoring environment files
+.env
+
+# Ignoring datas
+datas
+
+# Ignoring logs
+logs/*
