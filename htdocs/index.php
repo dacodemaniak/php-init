@@ -1,11 +1,7 @@
 <?php
-/**
- * /index.php
- * Application entry point
- * 
- * @author jean-luc - jean-luc.a@ideafactory.fr - Aug. 2020
- * @version 1.0.0
- * @license MIT
- */
+// Affecter la valeur à la variable bonjourQui de PHP
+$bonjourQui = "Moto"; // C'est une variable qui porte le nom bonjourQui
 
-echo "Hello PHP !";
+echo "Hello $bonjourQui !"; // Apache, envoie moi le résultat
+?>
+<!-- Plus personne n'existe de PHP -->
