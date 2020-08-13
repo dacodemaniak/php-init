@@ -1,8 +1,10 @@
 <?php
 /**
- * index.php
+ * /index.php
+ * Application entry point
+ * 
  * @author jean-luc - jean-luc.a@ideafactory.fr - Aug. 2020
  * @version 1.0.0
- * Entry point for init application
+ * @license MIT
  */
 echo "Hello PHP !";
