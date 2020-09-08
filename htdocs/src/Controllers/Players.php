@@ -6,8 +6,16 @@
  *  Contrôleur pour la gestion des joueurs du Solitaire
  */
 require_once(__DIR__ . '/../Core/Controllers/Controller.php');
+require_once(__DIR__ . '/../Repositories/PlayerRepository.php');
 
 final class Players extends Controller {
+
+    /**
+     * @var PlayerRepository $repository
+     *  Dépôt des données des joueurs
+     */
+    private $repository;
+
     /**
      * @var string $title
      *  Titre qui sera passé à la vue
@@ -18,9 +26,32 @@ final class Players extends Controller {
 
 
     public function __construct(){
+        // Instancier le dépôt des données
+        $this->repository = new PlayerRepository();
+    }
+
+    public function bestof() {
         $this->view = __DIR__ . '/Views/players.view.php';
     }
 
+    public function onePlayer() {
+        $this->view = __DIR__ . '/Views/player.view.php';
+    }
+
+    public function invoke(array $args = []) {
+        $method = array_key_exists('method', $_GET) ? $_GET['method'] : 'bestof';
+        call_user_func_array(
+            [
+                $this,
+                $method
+            ], // Le nom de la méthode ($method) de l'objet courant ($this)
+            $args // Les paramètres éventuels à transmettre à cette méthode
+        );
+    }
+
+    public function getRepository(): PlayerRepository {
+        return $this->repository;
+    }
 
     /**
      * Définit la valeur de l'attribut privé "title"

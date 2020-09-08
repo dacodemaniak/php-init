@@ -11,6 +11,7 @@ abstract class Controller {
     protected $view;
 
     public function renderView() {
+        $controller = $this; // Définit une variable égale au contrôleur courant
         include($this->view);
     }
 }

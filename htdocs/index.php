@@ -23,5 +23,8 @@ require_once(__DIR__ . '/src/Controllers/' . $request->getControllerName());
 $class = $request->getController();
 $controller = new $class(); // new NotFound() ou new Players() en fonction de la requête HTTP
 
+// Comment appeler une méthode en particulier de ce contrôleur
+$controller->invoke();
+
 // Retourner une réponse HTTP
 $controller->renderView();
