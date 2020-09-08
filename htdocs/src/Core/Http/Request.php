@@ -30,9 +30,17 @@ class Request {
      */
     private $controller;
 
-    public function __construct() {
+    /**
+     * @var string $fallback
+     *  Contrôleur par défaut à afficher si aucun contrôleur n'a été trouvé
+     */
+    private $fallback;
+
+    public function __construct(string $fallback = null) {
         $this->requestType = $_SERVER['REQUEST_METHOD'];
         $this->requestParams = $_GET;
+
+        $this->fallback = $fallback;
 
         $this->_setControllerName(); // Définit le nom du fichier qui contient le contrôleur
     }
@@ -71,8 +79,16 @@ class Request {
             }
             
         } else {
-            $this->controllerName = 'NotFound.php'; // Fallback (par défaut, ce sera NotFound.php)
-            $this->controller = 'NotFound';
+            if (!is_null($this->fallback)) {
+                $controllerName = $this->fallback . ".php";
+                $controller = $this->fallback;
+            } else {
+                $controllerName = "NotFound.php";
+                $controller = "NotFound";
+            }
+
+            $this->controllerName = $controllerName; // Fallback (par défaut, ce sera NotFound.php)
+            $this->controller = $controller;
         }
     }
 }

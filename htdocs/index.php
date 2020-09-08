@@ -24,7 +24,7 @@ $class = $request->getController();
 $controller = new $class(); // new NotFound() ou new Players() en fonction de la requête HTTP
 
 // Comment appeler une méthode en particulier de ce contrôleur
-$controller->invoke();
+$controller->invoke(); // i.e $controller->bestof()
 
 // Retourner une réponse HTTP
-$controller->renderView();
+$controller->sendResponse();

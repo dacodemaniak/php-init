@@ -7,8 +7,9 @@
  */
 require_once(__DIR__ . '/../Core/Controllers/Controller.php');
 require_once(__DIR__ . '/../Repositories/PlayerRepository.php');
+require_once(__DIR__ . '/../Core/Controllers/InvocableInterface.php');
 
-final class Players extends Controller {
+final class Players extends Controller implements InvocableInterface {
 
     /**
      * @var PlayerRepository $repository
@@ -32,10 +33,14 @@ final class Players extends Controller {
 
     public function bestof() {
         $this->view = __DIR__ . '/Views/players.view.php';
+        
+        $this->togglePopover();
+        $this->renderView();
     }
 
     public function onePlayer() {
         $this->view = __DIR__ . '/Views/player.view.php';
+        $this->renderView();
     }
 
     public function invoke(array $args = []) {
