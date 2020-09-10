@@ -1,0 +1,14 @@
+<VirtualHost *:80>
+    ServerName solitaire.local
+    ServerAlias api.solitaire.local
+
+    # Assurez vous du nom du dossier dans lequel réside vos fichiers PHP (ici solitaire)
+    DocumentRoot "${INSTALL_DIR}/www/solitaire"
+
+    <Directory "${INSTALL_DIR}/www/solitaire">
+        Options +Indexes +Includes +FollowSymLinks + MultiViews
+        AllowOverride All
+        Allow from all
+        FallbackResource /index.php
+    </Directory>
+</VirtualHost>
