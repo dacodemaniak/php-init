@@ -7,23 +7,44 @@
  */
 
 require_once(__DIR__ . '/../Models/PlayerModel.php');
-
-class PlayerRepository {
-    /**
-     * @var array $repository
-     *  Tableau qui contient l'ensemble des objets PlayerModel
-     */
-    private $repository;
+require_once(__DIR__ . '/../Core/Database/PDOMySQL.php');
+require_once(__DIR__ . '/../Core/Database/Repository/Repository.php');
+class PlayerRepository extends Repository {
 
     public function __construct() {
-        $this->repository = []; // Initialise le repository
-
-        // Hydrate la collection des Players
-        $this->_hydrate();
+        // Appeler explicitement le constructeur de la classe parente
+        parent::__construct(substr(get_class($this), 0, strpos(get_class($this),'Repository')));
     }
 
-    public function getRepository(): array {
+    /**
+     * Override
+     *  @see Repository::findAll()
+     */
+    public function findAll(): array {
+        $results = parent::findAll();
+
+        foreach ($results as $row) {
+            $player = new PlayerModel();
+            $player->setName($row['name']);
+            $player->setTime(\DateTime::createFromFormat('H:i:s',$row['time']));
+
+            $this->repository[] = $player;
+        }
+
         return $this->repository;
+    }
+
+    public function findById(int $id): PlayerModel {
+        $sqlQuery = 'SELECT ' . implode(',', $this->cols) . ' FROM ' . $this->table . ' WHERE id = :id;';
+
+        $statement = $this->db->prepare($sqlQuery);
+
+        $result = $statement->fetchAll();
+
+        // Exécuter la requête préparée
+        $statement->execute(['id' => $id]);
+
+        return new PlayerModel($result[0]['name'], \DateTime::createFromFormat('H:i:s', $result[0]['time']));
     }
 
     public function findByName(string $name): PlayerModel {
@@ -37,9 +58,6 @@ class PlayerRepository {
         return $model;
     }
 
-    public function findAll(): array {
-        return $this->repository;
-    }
     
     private function _hydrate() {
         $this->repository[] = new PlayerModel('Jean-Luc', new \DateTime());

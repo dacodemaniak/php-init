@@ -14,6 +14,7 @@ error_reporting(E_ALL);
 
 require_once(__DIR__ . '/src/Core/Http/Request.php');
 
+
 // Traiter la requête HTTP
 // Créer une instance de l'objet Request
 $request = new Request();
