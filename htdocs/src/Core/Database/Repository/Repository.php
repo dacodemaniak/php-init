@@ -52,8 +52,24 @@ abstract class Repository {
         $sqlQuery = 'SELECT ' . implode(',', $this->cols) . ' FROM ' . $this->table . ';';
         $results = $this->db->query($sqlQuery);
 
-        return $results;
+        foreach ($results as $row) {
+            $instance = $this->modelClass;
+            $modelInstance = new $instance($row);
+            $this->repository[] = $modelInstance;
+        }
+        return $this->repository;
     }
 
-    public function findById(int $id) {}
+    public function findById(int $id) {
+        $sqlQuery = 'SELECT ' . implode(',', $this->cols) . ' FROM ' . $this->table . ' WHERE id = :id;';
+
+        $statement = $this->db->prepare($sqlQuery);
+
+        $statement->execute(['id' => $id]);
+
+        $result = $statement->fetch(); // Récupère le seul et unique résultat
+
+        $instance = $this->modelClass;
+        return new $instance($result);
+    }
 }

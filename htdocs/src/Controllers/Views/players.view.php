@@ -39,7 +39,7 @@
                     <?php
                         foreach ($controller->getRepository()->findAll() as $player) {
                             echo '<li class="list-group-item">';
-                            echo '<a href="index.php?controller=players&method=onePlayer&name=' . $player->getName() . '" title="Voir le détail" data-original-title="' . $player->getName() . '" data-content="' . $player->getTime() . '" data-toggle="popover" data-trigger="hover">';
+                            echo '<a href="index.php?controller=players&method=onePlayer&id=' . $player->getId() . '" title="Voir le détail" data-original-title="' . $player->getName() . '" data-content="' . $player->getTime() . '" data-toggle="popover" data-trigger="hover">';
                             echo $player->getName();
                             echo '</a></li>';
                         }

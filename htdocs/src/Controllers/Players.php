@@ -34,7 +34,6 @@ final class Players extends Controller implements InvocableInterface {
     public function bestof() {
         $this->view = __DIR__ . '/Views/players.view.php';
         
-        $this->togglePopover();
         $this->renderView();
     }
 

@@ -15,8 +15,8 @@
         <!-- Ce qui serait bien, serait de lister les players ! -->
         <ul>
             <?php
-                echo '<strong>' . $controller->getRepository()->findByName($_GET["name"])->getName() . '</strong>';
-                echo ' : ' . $controller->getRepository()->findByName($_GET["name"])->getTime();
+                echo '<strong>' . $controller->getRepository()->findById($_GET["id"])->getName() . '</strong>';
+                echo ' : ' . $controller->getRepository()->findById($_GET["id"])->getTime();
             ?>
         </ul>
     </body>
