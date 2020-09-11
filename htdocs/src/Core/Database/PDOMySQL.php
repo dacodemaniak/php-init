@@ -7,11 +7,7 @@ require_once(__DIR__ . '/AbstractDatabaseLayer.php');
 
 class PDOMySQL extends AbstractDatabaseLayer {
     public function __construct() {
-        $this->port = 3306;
-        $this->host = 'db';
-        $this->username = 'solitaire';
-        $this->password = 'solitaire';
-        $this->dbName = 'solitaire_repo';
+        parent::__construct();
     }
 
     public function connect() {

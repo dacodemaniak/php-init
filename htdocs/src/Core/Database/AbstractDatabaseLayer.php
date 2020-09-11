@@ -40,6 +40,25 @@ abstract class AbstractDatabaseLayer {
      */
     protected $db;
 
+    public function __construct() {
+        // Read database configuration... or die
+        $envFile = __DIR__ . '/../../../env/.env.json';
+        $envContents = file_get_contents($envFile);
+
+        $config = json_decode($envContents, false);
+
+        if (property_exists($config, 'database')) {
+            $databaseConfig = $config->database;
+
+            // Définit les valeurs des attributs
+            $this->dbName = $databaseConfig->name;
+            $this->host = $databaseConfig->host;
+            $this->port = $databaseConfig->port;
+            $this->username = $databaseConfig->username;
+            $this->password = $databaseConfig->password;
+        }
+    }
+ 
     /**
      * Retourne l'instance de connexion à la base de données
      */
