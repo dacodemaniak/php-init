@@ -24,7 +24,7 @@ class PlayerModel {
      */
     private $time;
 
-    public function __construct(?array $datas = null) {
+    public function __construct(array $datas = null) {
         if (!is_null($datas)) {
             $this->_hydrate($datas);
         }
@@ -37,7 +37,7 @@ class PlayerModel {
     public function setId(int $id) {
         $this->id = $id;
     }
-    
+
     public function setName(string $name) {
         $this->name = $name;
     }
