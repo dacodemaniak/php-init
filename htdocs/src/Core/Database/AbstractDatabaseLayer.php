@@ -56,6 +56,8 @@ abstract class AbstractDatabaseLayer {
             $this->port = $databaseConfig->port;
             $this->username = $databaseConfig->username;
             $this->password = $databaseConfig->password;
+        } else {
+            die('database configuration is missing in ' . $envFile);
         }
     }
  
