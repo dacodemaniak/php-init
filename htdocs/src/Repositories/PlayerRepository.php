@@ -2,8 +2,11 @@
 /**
  * src/Repositories/PlayerRepository.php
  * @author ADRAR - Sept 2020
- * @version 1.0.0
+ * @version 1.1.0
  *  Collectionne l'ensemble des joueurs de solitaire
+ * Update Sept. 2020 :
+ *  - Généralisation du repository dans src/Core/Database/Repository/Repository.php
+ *  - Mise à jour de la méthode findByName()
  */
 
 require_once(__DIR__ . '/../Models/PlayerModel.php');
@@ -16,14 +19,18 @@ class PlayerRepository extends Repository {
         parent::__construct(substr(get_class($this), 0, strpos(get_class($this),'Repository')));
     }
 
-    public function findByName(string $name): PlayerModel {
-        $model = null; // Par défaut, on considère un model null
-        
-        foreach ($this->repository as $playerModel) {
-            if ($playerModel->getName() === $name) {
-                $model = $playerModel;
+    public function findByName(string $name): ?array {
+        $sqlQuery = 'SELECT ' . implode(',', $this->cols) . ' FROM ' . $this->table;
+        $sqlQuery .= ' WHERE name LIKE :name;';
+
+        $statement = $this->db->prepare($sqlQuery)
+            ->execute(['name' => '%' . $name . '%']);
+
+        if ($statement) {
+            while($row = $statement->fetch()) {
+                $this->repository[] = new PlayerModel($row);
             }
         }
-        return $model;
+        return $this->repository;
     }
 }
