@@ -1,6 +1,6 @@
 # Ignoring environment files
 .env
-htdocs/env
+htdocs/env/.env.json
 
 # Ignoring datas
 datas
