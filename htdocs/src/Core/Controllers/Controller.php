@@ -16,7 +16,7 @@ abstract class Controller implements InvocableInterface {
     /**
      * Collection des contrôleurs globaux : menu, footer, etc...
      */
-    protected $globalControllers;
+    protected $globalControllers = [];
 
 
     /**

@@ -70,7 +70,13 @@ class Request {
             'controller' => 'Players',
             'method' => 'addPlayer',
             'pattern' => '#^/players#'
-        ],        
+        ],
+        [
+            'path' => '**',
+            'httpMethod' => 'GET',
+            'controller' => 'NotFound',
+            'method' => 'notFound'
+        ]        
     ];
 
     public function __construct(string $fallback = null) {
@@ -94,7 +100,7 @@ class Request {
      * @return Response
      */
     public function process(): Response {
-        return $this->controller->invoke();
+        return $this->controller->invoke($this->requestParams);
     }
 
     public function getRequestType(): string {
@@ -128,33 +134,40 @@ class Request {
         $laRoute = null;
 
         foreach ($this->routes as $route) {
-            if ($route['httpMethod'] === $this->requestType) {
-                // Try to match from regex
-                if (preg_match($route['pattern'], $this->requestURI, $matches)) {
-                    // Correspondance de motif trouvée
-                    $laRoute = $route;
-                    break;
+            if (array_key_exists('pattern', $route)) {
+                if ($route['httpMethod'] === $this->requestType) {
+                    // Try to match from regex
+                    if (preg_match($route['pattern'], $this->requestURI, $matches)) {
+                        // Correspondance de motif trouvée
+                        $laRoute = $route;
+                        
+                        // Récupérer les valeurs paramétrables de la route
+                        $result = preg_match_all('/\{(.*?)\}/', $route['path'], $params);
+                        
+                        if ($result) {
+                            //var_dump($params);
+                            $this->requestParams[$params[1][0]] = $matches[$params[1][0]];
+                        }
+                        break;
+                    }
                 }
             }
         }
+        
 
         // Si on a trouvé une route...
-        if ($laRoute) {
-            $controllerName = $laRoute['controller'] . '.php';
-            $controller = $laRoute['controller'];
-            
-            // Pauvre implémentation de la méthode à utiliser dans le contrôleur
-            $_GET['method'] = $laRoute['method'];
+        if (!$laRoute) {
+            // Récupérer la dernière route... '**' pour déterminer le fallback
+            $laRoute = $this->routes[count($this->routes) - 1];
 
-        } else {
-            if (!is_null($this->fallback)) {
-                $controllerName = $this->fallback . ".php";
-                $controller = $this->fallback;
-            } else {
-                $controllerName = "NotFound.php";
-                $controller = "NotFound";
-            }            
-        }
+
+        } 
+        $controllerName = $laRoute['controller'] . '.php';
+        $controller = $laRoute['controller'];
+        
+        // Pauvre implémentation de la méthode à utiliser dans le contrôleur
+        $_GET['method'] = $laRoute['method'];
+
         // Requérir le fichier contenant la classe du contrôleur
         require_once(__DIR__ . '/../../../Controllers/' . $controller . '/' . $controllerName);
 

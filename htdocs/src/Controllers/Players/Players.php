@@ -42,9 +42,14 @@ final class Players extends Controller {
         
     }
 
-    public function onePlayer() {
+    public function onePlayer(int $id) {
+        $this->player = $this->repository->findById($id); // L'attribut player n'existe pas... c'est normal
+
+        $this->response = new HtmlResponse($this);
+
         $this->view = __DIR__ . '/Views/player.view.php';
-        $this->renderView();
+
+        return $this->response;
     }
 
     public function addPlayer() {
@@ -58,36 +63,9 @@ final class Players extends Controller {
         return $this->repository;
     }
 
-    /**
-     * Définit la valeur de l'attribut privé "title"
-     *  avec la valeur du paramètre "title" transmis
-     * => setter
-     */
-    public function setTitle(string $title) {
-        if (is_numeric($title)) {
-            die('T\'es lourd ou quoi, on a dit string !');
+    public function __get(string $attribute) {
+        if (!property_exists($this, $attribute)) {
+            return $this->$attribute;
         }
-
-        $this->title = $title;
-    }
-
-    /**
-     * Retourne la valeur "title" de l'objet courant (this)
-     *  => getter
-     */
-    public function getTitle(): string {
-        return $this->title;
-    }
-
-    public function setSubTitle(string $subtitle) {
-        $this->subtitle = $subtitle;
-    }
-
-    public function getSubtitle(): string {
-        return $this->subtitle;
-    }
-
-    public function htmlTitles(): string {
-        return '<h1 class="my-title-class">' . $this->title . '</h1>' . '<h2>' . $this->subtitle . '</h2>';
     }
 }

@@ -4,20 +4,8 @@
  *  Vue avec les données des joueurs
  */
 ?>
-<!doctype html>
-<html lang="fr">
-    <head>
-        <title>Player</title>
-    </head>
-
-    <body>
-        <h1>Un joueur</h1>
-        <!-- Ce qui serait bien, serait de lister les players ! -->
-        <ul>
-            <?php
-                echo '<strong>' . $controller->getRepository()->findById($_GET["id"])->getName() . '</strong>';
-                echo ' : ' . $controller->getRepository()->findById($_GET["id"])->getTime();
-            ?>
-        </ul>
-    </body>
-</html>
+<h1>Un joueur</h1>
+<!-- Ce qui serait bien, serait de lister les players ! -->
+<p>
+    <strong><?php echo $controller->player->getName(); ?></strong> : <?php echo ' : ' . $controller->player->getTime();?>
+</p>
