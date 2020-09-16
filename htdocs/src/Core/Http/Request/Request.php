@@ -54,13 +54,22 @@ class Request {
             'path' => '/players',
             'httpMethod' => 'GET',
             'controller' => 'Players',
-            'method' => 'bestof'
+            'method' => 'bestof',
+            'pattern' => '#^/players$#'
+        ],
+        [
+            'path' => '/players/{id}',
+            'httpMethod' => 'GET',
+            'controller' => 'Players',
+            'method' => 'onePlayer',
+            'pattern' => '#^/players/(?P<id>[0-9]+)$#'
         ],
         [
             'path' => '/players',
             'httpMethod' => 'POST',
             'controller' => 'Players',
-            'method' => 'addPlayer'
+            'method' => 'addPlayer',
+            'pattern' => '#^/players#'
         ],        
     ];
 
@@ -117,10 +126,15 @@ class Request {
 
     private function _traiterURI() {
         $laRoute = null;
+
         foreach ($this->routes as $route) {
-            if ($this->requestURI === $route['path'] && $this->requestType === $route['httpMethod']) {
-                $laRoute = $route;
-                break;
+            if ($route['httpMethod'] === $this->requestType) {
+                // Try to match from regex
+                if (preg_match($route['pattern'], $this->requestURI, $matches)) {
+                    // Correspondance de motif trouvée
+                    $laRoute = $route;
+                    break;
+                }
             }
         }
 
@@ -128,8 +142,10 @@ class Request {
         if ($laRoute) {
             $controllerName = $laRoute['controller'] . '.php';
             $controller = $laRoute['controller'];
+            
             // Pauvre implémentation de la méthode à utiliser dans le contrôleur
             $_GET['method'] = $laRoute['method'];
+
         } else {
             if (!is_null($this->fallback)) {
                 $controllerName = $this->fallback . ".php";
@@ -141,6 +157,7 @@ class Request {
         }
         // Requérir le fichier contenant la classe du contrôleur
         require_once(__DIR__ . '/../../../Controllers/' . $controller . '/' . $controllerName);
+
         // Retouner l'instanciation du contrôleur
         return new $controller();
     }
