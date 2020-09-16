@@ -6,6 +6,8 @@
  *  Contrôleur pour la gestion des joueurs du Solitaire
  */
 require_once(__DIR__ . '/../Core/Controllers/Controller.php');
+require_once(__DIR__ . '/../Core/Http/Response/Response.php');
+require_once(__DIR__ . '/../Core/Http/Response/HtmlResponse.php');
 require_once(__DIR__ . '/../Repositories/PlayerRepository.php');
 require_once(__DIR__ . '/../Core/Controllers/InvocableInterface.php');
 
@@ -32,9 +34,16 @@ final class Players extends Controller implements InvocableInterface {
     }
 
     public function bestof() {
+        // Instancie une réponse
+        $response = new HtmlResponse();
+
+        // Définit la vue à traiter...
         $this->view = __DIR__ . '/Views/players.view.php';
         
-        $this->renderView();
+        // Définit le contenu dans l'objet Response
+        $response->setContent($this->renderView());
+
+        return $response;
     }
 
     public function onePlayer() {
@@ -42,15 +51,11 @@ final class Players extends Controller implements InvocableInterface {
         $this->renderView();
     }
 
-    public function invoke(array $args = []) {
-        $method = array_key_exists('method', $_GET) ? $_GET['method'] : 'bestof';
-        call_user_func_array(
-            [
-                $this,
-                $method
-            ], // Le nom de la méthode ($method) de l'objet courant ($this)
-            $args // Les paramètres éventuels à transmettre à cette méthode
-        );
+    public function addPlayer() {
+        $this->player = $this->repository->save();
+
+        $this->view = __DIR__ . '/Views/add.json.php';
+        $this->renderView();
     }
 
     public function getRepository(): PlayerRepository {

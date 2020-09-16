@@ -3,6 +3,9 @@
  * src/Core/Controllers/Controller.php
  *  Classe parente qui définit le modèle de TOUS les contrôleurs
  */
+
+ require_once(__DIR__ . '/../Http/Response/Response.php');
+
 abstract class Controller {
     /**
      * @var string $view
@@ -56,7 +59,7 @@ abstract class Controller {
         $this->enablePopover = !$this->enablePopover;
     }
 
-    protected function renderView() {
+    protected function renderView(): string {
         $controller = $this; // Définit une variable égale au contrôleur courant
         $stylesheets = $this->stylesheets;
         $scripts = $this->javascripts;
@@ -64,14 +67,31 @@ abstract class Controller {
         include($this->view);
         $this->parseTemplate = ob_get_contents();
         ob_end_clean();
+
+        return $this->parseTemplate;
     }
 
     public function getStylesheets(): array {
         return $this->stylesheets;
     }
 
+    public function invoke(array $args = []): Response {
+        $method = array_key_exists('method', $_GET) ? $_GET['method'] : 'bestof';
+        return call_user_func_array(
+            [
+                $this,
+                $method
+            ], // Le nom de la méthode ($method) de l'objet courant ($this)
+            $args // Les paramètres éventuels à transmettre à cette méthode
+        );
+    }
+
     public function sendResponse() {
-        header('Content-Type: text/html', false, 200);
+        //header('Content-Type: text/html', false, 200);
+        header('Access-Control-Allow-Origin: http://127.0.0.1:8080');
+        header('Access-Control-Allow-Headers: *');
+        header('Access-Control-Allow-Methods: GET, POST, PATCH, OPTIONS');
+        
         echo $this->parseTemplate;
     }
 }

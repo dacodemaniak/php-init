@@ -72,4 +72,12 @@ abstract class Repository {
         $instance = $this->modelClass;
         return new $instance($result);
     }
+
+    protected function getLastInsert() {
+        $sqlQuery = 'SELECT id FROM ' . $this->table . ' ORDER BY id DESC LIMIT 0,1;';
+
+        $results = $this->db->query($sqlQuery);
+
+        return $results->fetch();
+    }
 }
