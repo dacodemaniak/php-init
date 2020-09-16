@@ -14,15 +14,4 @@ class NotFound extends Controller implements InvocableInterface {
     public function notFound() {
         $this->renderView();
     }
-
-    public function invoke(array $args = []) {
-        $method = array_key_exists('method', $_GET) ? $_GET['method'] : 'notFound';
-        call_user_func_array(
-            [
-                $this,
-                $method
-            ], // Le nom de la méthode ($method) de l'objet courant ($this)
-            $args // Les paramètres éventuels à transmettre à cette méthode
-        );        
-    }
 }

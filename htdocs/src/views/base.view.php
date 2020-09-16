@@ -20,11 +20,16 @@
             <header>
                 <h1>Main single page title</h1>
 
-                <!-- Display menu content (from menuController) -->
+                <?php
+                    if (array_key_exists('menu', $controller->getGlobalControllers())) {
+                        $menuController = $controller->getGlobalControllers()['menu'];
+                        echo $menuController->renderView();
+                    }
+                ?>
             </header>
 
             <main>
-                <!-- Display main content (from the current controller) -->
+                <?php echo $controller->renderView(); ?>
             </main>
 
             <footer>

@@ -140,7 +140,7 @@ class Request {
             }            
         }
         // Requérir le fichier contenant la classe du contrôleur
-        require_once(__DIR__ . '/../../../Controllers/' . $controllerName);
+        require_once(__DIR__ . '/../../../Controllers/' . $controller . '/' . $controllerName);
         // Retouner l'instanciation du contrôleur
         return new $controller();
     }

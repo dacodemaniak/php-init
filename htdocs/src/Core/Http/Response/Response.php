@@ -3,6 +3,9 @@
  * src/Core/Http/Response.php
  *  Définition abstraite des réponses HTTP
  */
+
+require_once(__DIR__ . '/../../Controllers/Controller.php');
+
 abstract class Response {
     /**
      * Collection des en-têtes HTTP à transmettre
@@ -23,10 +26,13 @@ abstract class Response {
     protected $status = 200;
 
     /**
-     * Définit le contenu à transmettre au serveur web
+     * Instance du contrôleur principal
+     * @var Controller
      */
-    public function setContent(string $content) {
-        $this->content = $content;
+    protected $controller;
+
+    public function __construct(Controller $controller) {
+        $this->controller = $controller;
     }
 
     /**

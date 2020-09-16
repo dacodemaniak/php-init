@@ -5,13 +5,13 @@
  * @version 1.0.0
  *  Contrôleur pour la gestion des joueurs du Solitaire
  */
-require_once(__DIR__ . '/../Core/Controllers/Controller.php');
-require_once(__DIR__ . '/../Core/Http/Response/Response.php');
-require_once(__DIR__ . '/../Core/Http/Response/HtmlResponse.php');
-require_once(__DIR__ . '/../Repositories/PlayerRepository.php');
-require_once(__DIR__ . '/../Core/Controllers/InvocableInterface.php');
+require_once(__DIR__ . '/../../Core/Controllers/Controller.php');
+require_once(__DIR__ . '/../../Core/Http/Response/Response.php');
+require_once(__DIR__ . '/../../Core/Http/Response/HtmlResponse.php');
+require_once(__DIR__ . '/../../Repositories/PlayerRepository.php');
+require_once(__DIR__ . '/../Menu/MenuController.php');
 
-final class Players extends Controller implements InvocableInterface {
+final class Players extends Controller {
 
     /**
      * @var PlayerRepository $repository
@@ -19,31 +19,27 @@ final class Players extends Controller implements InvocableInterface {
      */
     private $repository;
 
-    /**
-     * @var string $title
-     *  Titre qui sera passé à la vue
-     */
-    private $title = 'Hall of Fame';
-
-    private $subtitle;
-
 
     public function __construct(){
         // Instancier le dépôt des données
         $this->repository = new PlayerRepository();
+
+        // Instancier les contrôleurs "globaux" : menu, footer, etc...
+        $this->globalControllers = [
+            'menu' => new MenuController()
+        ];
     }
 
-    public function bestof() {
+    public function bestof(): Response {
         // Instancie une réponse
-        $response = new HtmlResponse();
+        $this->response = new HtmlResponse($this);
 
-        // Définit la vue à traiter...
+        // La vue complète se situe dans 'src/Views/base.view.php'
         $this->view = __DIR__ . '/Views/players.view.php';
         
-        // Définit le contenu dans l'objet Response
-        $response->setContent($this->renderView());
-
-        return $response;
+        // Retourne l'objet Response
+        return $this->response;
+        
     }
 
     public function onePlayer() {
